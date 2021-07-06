@@ -119,9 +119,6 @@ trait PassportToken
      */
     protected function getBearerTokenByUser(User $user, $clientId = 2, $tokenScopes = [], $output = true)
     {
-        //you can simply use this method (available only on laravel 6.x)
-        //return collect($user->createToken(''))->forget('token');
-
         $passportToken = $this->createPassportTokenByUser($user, $clientId, $tokenScopes);
         $bearerToken = $this->sendBearerTokenResponse($passportToken['access_token'], $passportToken['refresh_token']);
 
