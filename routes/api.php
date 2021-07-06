@@ -13,9 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['throttle:25,1', 'auth:api'])->prefix('user')->group(function () {
-    Route::post('/register', [AuthController::class, 'register'])->withoutMiddleware('auth:api');
-    Route::post('/login', [AuthController::class, 'login'])->withoutMiddleware('auth:api');
-    Route::post('/refreshMe', [AuthController::class, 'refresh'])->withoutMiddleware('auth:api');
+Route::middleware(['throttle:25,1', 'auth:api', InitializeTenancyBySubdomain::class, PreventAccessFromCentralDomains::class])->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
+    Route::post('/login', [AuthController::class, 'login']);
+});
+
+Route::middleware(['throttle:25,1'])->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
 });
