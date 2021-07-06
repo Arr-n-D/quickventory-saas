@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use App\Models\Tenant;
+use App\Models\Customer;
 use Stancl\Tenancy\Database\Models\Domain;
 
 return [
-    'tenant_model' => Tenant::class,
+    'tenant_model' => Customer::class,
     'id_generator' => Stancl\Tenancy\UUIDGenerator::class,
 
     'domain_model' => Domain::class,
@@ -50,7 +50,7 @@ return [
          * Tenant database names are created like this:
          * prefix + tenant_id + suffix.
          */
-        'prefix' => 'tenant_',
+        'prefix' => 'customer_',
         'suffix' => '',
 
         /**
@@ -147,7 +147,7 @@ return [
      * either using the Redis facade or by injecting it as a dependency.
      */
     'redis' => [
-        'prefix_base' => 'tenant_', // Each key in Redis will be prepended by this prefix_base, followed by the tenant id.
+        'prefix_base' => 'customer_', // Each key in Redis will be prepended by this prefix_base, followed by the tenant id.
         'prefixed_connections' => [ // Redis connections whose keys are prefixed, to separate one tenant's keys from another.
             // 'default',
         ],
@@ -183,7 +183,7 @@ return [
      */
     'migration_parameters' => [
         '--force' => true, // This needs to be true to run migrations in production.
-        '--path' => [database_path('migrations/tenant')],
+        '--path' => [database_path('migrations/customer')],
         '--realpath' => true,
     ],
 
