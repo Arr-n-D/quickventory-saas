@@ -14,7 +14,7 @@ class AddDeletedAtToTenantsTable extends Migration
     public function up()
     {
         Schema::table('tenants', function (Blueprint $table) {
-            //
+            $table->softDeletes();
         });
     }
 

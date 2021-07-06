@@ -14,7 +14,7 @@ class AddDeletedAtToDomains extends Migration
     public function up()
     {
         Schema::table('domains', function (Blueprint $table) {
-            //
+            $table->softDeletes();
         });
     }
 
@@ -26,7 +26,7 @@ class AddDeletedAtToDomains extends Migration
     public function down()
     {
         Schema::table('domains', function (Blueprint $table) {
-            //
+            
         });
     }
 }
