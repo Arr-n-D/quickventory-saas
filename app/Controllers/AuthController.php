@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Traits\PassportToken;
 use App\Traits\IssueTokenTrait;
 use Laravel\Passport\Client;
+use App\Models\Customer;
 
 /**
  * [Description AuthController]
@@ -42,15 +43,23 @@ class AuthController extends Controller
     {
         try {
             $validated = $request->validated();
-
             /** @var User $user */
             $user = User::create([
-                'username' => $validated['username'],
+                'first_name' => $validated['first_name'],
+                'last_name' => $validated['last_name'],
                 'email' => $validated['email'],
                 'password' => \bcrypt($validated['password']),
                 'date_of_birth' => $validated['date_of_birth']
             ]);
+            /** @var Customer $customer */
+            $customer = $user->customers()->create([
+                'customer_name' => $validated['email'],
+            ]);
+            $customer->domains()->create([
+                'domain' => 'cominar'
+            ]);
         } catch (\Exception $e) {
+            dd($e->getMessage());
             DB::rollBack();
             return $this->errorResponse();
         }

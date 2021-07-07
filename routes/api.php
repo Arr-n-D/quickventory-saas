@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,6 @@ Route::middleware(['throttle:25,1', 'auth:api', InitializeTenancyBySubdomain::cl
     Route::post('/login', [AuthController::class, 'login']);
 });
 
-Route::middleware(['throttle:25,1'])->group(function () {
+Route::middleware(['throttle:25,1'])->prefix('user')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
 });
