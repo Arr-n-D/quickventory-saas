@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDomainsTable extends Migration
+class CreateCustomerDomainsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -19,7 +19,6 @@ class CreateDomainsTable extends Migration
             $table->id();
             $table->string('domain', 255)->unique();
             $table->integer('customer_id');
-
             $table->timestamps();
             $table->foreign('customer_id')->references('id')->on('customers');
             $table->softDeletes();
@@ -33,6 +32,6 @@ class CreateDomainsTable extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('domains');
+        Schema::dropIfExists('customer_domains');
     }
 }

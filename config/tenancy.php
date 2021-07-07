@@ -3,13 +3,14 @@
 declare(strict_types=1);
 
 use App\Models\Customer;
+use App\Models\CustomerDomain;
 use Stancl\Tenancy\Database\Models\Domain;
 
 return [
     'tenant_model' => Customer::class,
     'id_generator' => Stancl\Tenancy\UUIDGenerator::class,
 
-    'domain_model' => Domain::class,
+    'domain_model' => CustomerDomain::class,
 
     /**
      * The list of domains hosting your central app.

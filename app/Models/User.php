@@ -55,6 +55,10 @@ class User extends Authenticatable
 
     public function findForPassport($identifier)
     {
-        return $this->orWhere('email', $identifier)->orWhere('username', $identifier)->first();
+        return $this->where('email', $identifier);
+    }
+
+    public function customers() {
+        return $this->hasMany(Customer::class);
     }
 }
