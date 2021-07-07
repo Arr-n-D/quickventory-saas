@@ -16,6 +16,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        Passport::ignoreMigrations();
         Cashier::ignoreMigrations();
         Passport::routes(null, ['middleware' => [
             'universal',

@@ -18,7 +18,7 @@ class CreateCustomerDomainsTable extends Migration
         Schema::create('customer_domains', function (Blueprint $table) {
             $table->id();
             $table->string('domain', 255)->unique();
-            $table->integer('customer_id');
+            $table->unsignedBigInteger('customer_id')->index();
             $table->timestamps();
             $table->foreign('customer_id')->references('id')->on('customers');
             $table->softDeletes();

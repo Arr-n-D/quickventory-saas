@@ -14,6 +14,7 @@ use App\Traits\PassportToken;
 use App\Traits\IssueTokenTrait;
 use Laravel\Passport\Client;
 use App\Models\Customer;
+// use Stancl\Tenancy\TenantDatabaseManagers\PermissionControlledMySQLDatabaseManager;
 
 /**
  * [Description AuthController]
@@ -50,13 +51,6 @@ class AuthController extends Controller
                 'email' => $validated['email'],
                 'password' => \bcrypt($validated['password']),
                 'date_of_birth' => $validated['date_of_birth']
-            ]);
-            /** @var Customer $customer */
-            $customer = $user->customers()->create([
-                'customer_name' => $validated['email'],
-            ]);
-            $customer->domains()->create([
-                'domain' => 'cominar'
             ]);
         } catch (\Exception $e) {
             dd($e->getMessage());

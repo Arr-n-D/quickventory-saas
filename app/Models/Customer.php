@@ -34,6 +34,15 @@ class Customer extends BaseTenant implements TenantWithDatabase
             'id',
             'customer_name',
             'user_id',
+            'tenancy_db_username',
+            'tenancy_db_password',
+            'stripe_id',
+            'pm_type',
+            'pm_last_four',
+            'trial_ends_at',
+            'created_at',
+            'updated_at',
+            'deleted_at',
         ];
     }
 
