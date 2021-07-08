@@ -2,13 +2,11 @@
 
 namespace App\Requests;
 
-use App\Requests\BaseRequest;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
 
-
 /**
- * Class RegisterRequest
+ * Class CustomerCreationPostRequest
  * @package App\Requests
  *
  * @property-read string $first_name
@@ -21,7 +19,7 @@ use Illuminate\Validation\Rules\Password;
  * @property-read string $password
  * @property-read bool $automatically_generate_db_password
  */
-class RegisterRequest extends FormRequest
+class CustomerCreationPostRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -48,7 +46,7 @@ class RegisterRequest extends FormRequest
             'date_of_birth' => 'required|date_format:Y-m-d|',
             'tenancy_db_username' => 'required|string|max:16',
             'tenancy_db_password' => [
-                'sometimes|required_if:automatically_generate_password,false',
+                'required_if:automatically_generate_password,false',
                 'string',
                 'confirmed',
                 Password::min(8)

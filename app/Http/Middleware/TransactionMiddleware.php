@@ -2,36 +2,38 @@
 
 namespace App\Http\Middleware;
 
-use Illuminate\Support\Facades\DB;
 use Closure;
-use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Response;
 
 class TransactionMiddleware
 {
-    public $transactionMethods = [
-        'POST',
-        'PATCH',
-        'PUT',
-        'DELETE'
-    ];
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure $next
      *
      * @return mixed
+     * @throws \Throwable
      */
     public function handle($request, Closure $next)
     {
-        if(Arr::has($this->transactionMethods, $request->method())) {
-            DB::beginTransaction();
-        }
-        return $next($request);
-    }
+        DB::beginTransaction();
 
-    public function terminate($request, $response)
-    {
-        DB::commit();
+        /** @var Response $response */
+        $response = $next($request);
+
+        if ((property_exists($response, 'exception') && $response->exception) || $response->getStatusCode() > 399) {
+            while (DB::transactionLevel() > 0) {
+                DB::rollBack();
+            }
+        } else {
+            while (DB::transactionLevel() > 0) {
+                DB::commit();
+            }
+        }
+
+        return $response;
     }
 }

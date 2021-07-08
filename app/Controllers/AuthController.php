@@ -2,19 +2,19 @@
 
 namespace App\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Requests\RegisterRequest;
 use App\Models\User;
-use App\Requests\LoginRequest;
-use App\Requests\RefreshTokenRequest;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
-use App\Traits\PassportToken;
-use App\Traits\IssueTokenTrait;
 use Laravel\Passport\Client;
+use App\Traits\PassportToken;
+use App\Requests\LoginRequest;
+use App\Traits\IssueTokenTrait;
+use App\Requests\RegisterRequest;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Requests\RefreshTokenRequest;
 use App\Models\Customer;
-// use Stancl\Tenancy\TenantDatabaseManagers\PermissionControlledMySQLDatabaseManager;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 /**
  * [Description AuthController]
@@ -43,22 +43,48 @@ class AuthController extends Controller
     public function register(RegisterRequest $request)
     {
         try {
-            $validated = $request->validated();
+            $request->validated();
             /** @var User $user */
             $user = User::create([
-                'first_name' => $validated['first_name'],
-                'last_name' => $validated['last_name'],
-                'email' => $validated['email'],
-                'password' => \bcrypt($validated['password']),
-                'date_of_birth' => $validated['date_of_birth']
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'email' => $request->email,
+                'password' => \bcrypt($request->password),
+                'date_of_birth' => $request->date_of_birth
             ]);
+
+            $password = $request->automatically_generate_db_password ? Str::random(16) : bcrypt($request->password);
+            /** @var Customer $customer */
+            $customer = $user->customers()->create([
+                'customer_name' => $request->customer_name,
+                'tenancy_db_username' => $request->tenancy_db_username,
+                'tenancy_db_password' => $request->automatically_generate_db_password ? \bcrypt($password) : bcrypt($request->password),
+            ]);
+
+            $customer->domains()->create([
+                'domain' => Str::snake($request->customer_name)
+            ]);
+
+            $customer->run(function() use($user)  {
+               User::create([
+                   'first_name' => $user->first_name,
+                   'last_name' => $user->last_name,
+                   'email' => $user->email,
+                   'password' => $user->password
+               ]);
+            });
+
         } catch (\Exception $e) {
-            dd($e->getMessage());
             DB::rollBack();
             return $this->errorResponse();
         }
 
-        return $this->getBearerTokenByUser($user->refresh(), $this->client->id);
+        $bearerTokenInfo = $this->getBearerTokenByUser($user->refresh(), $this->client->id);
+
+        return $this->okResponse([
+            'bearer' => $bearerTokenInfo,
+            'password' => $request->automatically_generate_db_password ? $password : null
+        ]);
     }
 
     /**
