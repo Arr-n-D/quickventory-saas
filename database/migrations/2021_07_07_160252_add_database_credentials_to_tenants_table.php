@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddDatabaseCredentialsToCustomersTable extends Migration
+class AddDatabaseCredentialsToTenantsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class AddDatabaseCredentialsToCustomersTable extends Migration
      */
     public function up()
     {
-        Schema::table('customers', function (Blueprint $table) {
+        Schema::table('tenants', function (Blueprint $table) {
             $table->string('tenancy_db_username');
             $table->string('tenancy_db_password');
         });
@@ -26,7 +26,7 @@ class AddDatabaseCredentialsToCustomersTable extends Migration
      */
     public function down()
     {
-        Schema::table('customers', function (Blueprint $table) {
+        Schema::table('tenants', function (Blueprint $table) {
             //
         });
     }

@@ -17,7 +17,7 @@ use Laravel\Passport\RefreshToken;
  * @property string $email 
  * @property string $password 
  * 
- * @property-read Customer[] $customers 
+ * @property-read Tenant[] $tenants 
  */
 class User extends Authenticatable
 {
@@ -69,7 +69,7 @@ class User extends Authenticatable
         return $this->where('email', $identifier);
     }
 
-    public function customers() {
-        return $this->hasMany(Customer::class);
+    public function tenants() {
+        return $this->hasMany(Tenant::class);
     }
 }

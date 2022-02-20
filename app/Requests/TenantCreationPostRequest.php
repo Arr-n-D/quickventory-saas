@@ -6,12 +6,12 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
 
 /**
- * Class CustomerCreationPostRequest
+ * Class TenantCreationPostRequest
  * @package App\Requests
  *
  * @property-read string $first_name
  * @property-read string $last_name
- * @property-read string $customer_name
+ * @property-read string $tenant_name
  * @property-read string $email
  * @property-read Carbon $date_of_birth
  * @property-read string $tenancy_db_username
@@ -19,7 +19,7 @@ use Illuminate\Validation\Rules\Password;
  * @property-read string $password
  * @property-read bool $automatically_generate_db_password
  */
-class CustomerCreationPostRequest extends FormRequest
+class TenantCreationPostRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -41,7 +41,7 @@ class CustomerCreationPostRequest extends FormRequest
         return [
             'first_name' => 'required|string',
             'last_name' => 'required|string',
-            'customer_name' => 'required|string|max:16',
+            'tenant_name' => 'required|string|max:16',
             'email' => 'required|string|email:rfc,dns|unique:users|max:255',
             'date_of_birth' => 'required|date_format:Y-m-d|',
             'tenancy_db_username' => 'required|string|max:16',
